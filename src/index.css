@@ -1,0 +1,230 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+  
+  --color-brand-primary: var(--brand-primary, #0B251C);
+  --color-brand-gold: var(--brand-gold, #C5A85C);
+  --color-brand-bg: var(--brand-bg, #F9F8F5);
+  --color-brand-text: var(--brand-text, #1E2D27);
+}
+
+/* Base styles for Arabic support and smooth scrolling */
+.text-brand-primary {
+  color: var(--brand-primary-text, var(--brand-primary, #0B251C)) !important;
+}
+
+.hover\:text-brand-primary:hover {
+  color: var(--brand-primary-text, var(--brand-primary, #0B251C)) !important;
+}
+
+.text-brand-gold {
+  color: var(--brand-gold-text, var(--brand-gold, #C5A85C)) !important;
+}
+
+.hover\:text-brand-gold:hover {
+  color: var(--brand-gold-text, var(--brand-gold, #C5A85C)) !important;
+}
+
+/* Exclude footer and specifically-styled dark containers from gold text overrides so they remain gold on dark backgrounds */
+footer .text-brand-gold,
+footer .hover\:text-brand-gold:hover,
+.bg-brand-primary .text-brand-gold,
+.bg-brand-primary.text-brand-gold {
+  color: var(--brand-gold, #C5A85C) !important;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--brand-bg, #F9F8F5);
+  color: var(--brand-text, #1E2D27);
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+.font-serif-luxury {
+  font-family: var(--font-serif);
+}
+
+.font-sans-clean {
+  font-family: var(--font-sans);
+}
+
+/* Custom scrollbar matching the green/gold aesthetic */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--brand-bg, #F9F8F5);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--brand-gold, #C5A85C);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-primary, #0B251C);
+}
+
+/* Animations & glass effects */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-panel-dark {
+  background: rgba(11, 37, 28, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ================= GLOBAL TYPOGRAPHY MODE ENFORCEMENT ================= */
+
+/* --- DARK MODE RULES --- */
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6,
+.dark-mode p,
+.dark-mode span:not(.text-brand-gold):not([class*="text-brand-gold"]),
+.dark-mode a:not(.keep-light):not([class*="bg-brand-gold"]):not([class*="bg-white"]):not(.text-brand-gold):not([class*="text-brand-gold"]),
+.dark-mode li,
+.dark-mode button:not(.keep-light):not([class*="bg-brand-gold"]):not([class*="bg-white"]):not(.text-brand-gold):not([class*="text-brand-gold"]),
+.dark-mode label,
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea {
+  color: #FFFFFF !important;
+}
+
+/* Ensure secondary texts have a slightly softer opacity for visual hierarchy but still white/light */
+.dark-mode p,
+.dark-mode .text-brand-text\/85,
+.dark-mode .text-brand-text\/80,
+.dark-mode .text-brand-text\/75,
+.dark-mode .text-brand-text\/70,
+.dark-mode .text-brand-text\/65,
+.dark-mode .text-brand-text\/60 {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.dark-mode .text-brand-text\/50,
+.dark-mode .text-brand-text\/40 {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* --- LIGHT MODE RULES --- */
+.light-mode h1,
+.light-mode h2,
+.light-mode h3,
+.light-mode h4,
+.light-mode h5,
+.light-mode h6,
+.light-mode p,
+.light-mode span:not(.keep-dark):not([class*="bg-brand-primary"]):not([class*="bg-black"]):not([class*="bg-slate-900"]):not(.text-brand-gold):not([class*="text-brand-gold"]),
+.light-mode a:not(.keep-dark):not([class*="bg-brand-primary"]):not([class*="bg-black"]):not([class*="bg-slate-900"]):not(.text-brand-gold):not([class*="text-brand-gold"]),
+.light-mode li,
+.light-mode button:not(.keep-dark):not([class*="bg-brand-primary"]):not([class*="bg-black"]):not([class*="bg-slate-900"]):not(.text-brand-gold):not([class*="text-brand-gold"]),
+.light-mode label,
+.light-mode input,
+.light-mode select,
+.light-mode textarea {
+  color: #000000 !important;
+}
+
+/* Ensure secondary texts have a slightly softer opacity but still dark/black */
+.light-mode p,
+.light-mode .text-brand-text\/85,
+.light-mode .text-brand-text\/80,
+.light-mode .text-brand-text\/75,
+.light-mode .text-brand-text\/70,
+.light-mode .text-brand-text\/65,
+.light-mode .text-brand-text\/60 {
+  color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.light-mode .text-brand-text\/50,
+.light-mode .text-brand-text\/40 {
+  color: rgba(0, 0, 0, 0.55) !important;
+}
+
+/* Maintain gold color on special gold elements/badges when we want to keep them gold */
+.dark-mode .text-brand-gold,
+.light-mode .text-brand-gold,
+.dark-mode .hover\:text-brand-gold:hover,
+.light-mode .hover\:text-brand-gold:hover {
+  color: var(--brand-gold, #C5A85C) !important;
+}
+
+/* Buttons with dark backgrounds in light mode should keep light/gold text */
+.light-mode .bg-brand-primary,
+.light-mode .bg-brand-primary *,
+.light-mode .bg-black,
+.light-mode .bg-black *,
+.light-mode [class*="bg-brand-primary"] h4,
+.light-mode [class*="bg-brand-primary"] span,
+.light-mode [class*="bg-brand-primary"] button {
+  color: var(--brand-gold, #C5A85C) !important;
+}
+
+/* Ensure custom map pin titles and special elements are readable */
+.light-mode .bg-brand-bg *:not(.text-brand-gold):not([class*="text-brand-gold"]):not(.keep-light),
+.light-mode .bg-brand-bg span:not(.text-brand-gold):not([class*="text-brand-gold"]):not(.keep-light),
+.light-mode .bg-brand-bg p:not(.text-brand-gold):not([class*="text-brand-gold"]):not(.keep-light) {
+  color: #000000 !important;
+}
+
+/* Enforce dark/light text overrides with .keep-dark and .keep-light */
+.keep-dark,
+.dark-mode .keep-dark,
+.light-mode .keep-dark {
+  color: var(--brand-primary, #1B3022) !important;
+}
+
+.keep-light,
+.dark-mode .keep-light,
+.light-mode .keep-light {
+  color: #FFFFFF !important;
+}
+
+/* Force black text color specifically in dark mode */
+.dark-mode .force-black-dark,
+.dark-mode a.force-black-dark,
+.dark-mode span.force-black-dark {
+  color: #000000 !important;
+}
+
+/* Ensure the Hero section text is light and clearly readable on dark slides */
+#home h1 {
+  color: #FFFFFF !important;
+}
+
+#home p {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+#home .text-brand-gold,
+#home span.text-brand-gold {
+  color: var(--brand-gold, #C5A85C) !important;
+}
+
+#home a[href="#menu"] {
+  color: var(--brand-gold, #C5A85C) !important;
+}
+
+#home a[href="#about"] {
+  color: #FFFFFF !important;
+}
+
+
+

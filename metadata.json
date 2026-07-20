@@ -1,0 +1,6 @@
+{
+  "name": "Organic Sip",
+  "description": "Boutique, luxury organic café with English-Arabic touches, slow-sliding hero images, and a live owner dashboard to customize colors, tabs, and products.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
