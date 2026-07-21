@@ -8,17 +8,19 @@ interface HeroSliderProps {
 }
 
 export default function HeroSlider({ images, lang }: HeroSliderProps) {
+  const safeImages = Array.isArray(images) ? images : [];
+  const safeLang = lang || 'en';
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    if (images.length === 0) return;
+    if (!safeImages || safeImages.length === 0) return;
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % safeImages.length);
     }, 6000); // Slowly slide every 6 seconds
     return () => clearInterval(interval);
-  }, [images]);
+  }, [safeImages]);
 
-  if (images.length === 0) return null;
+  if (!safeImages || safeImages.length === 0) return null;
 
   return (
     <div id="home" className="relative w-full h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)] overflow-hidden flex items-end justify-center bg-black pb-24 sm:pb-32">
@@ -27,7 +29,7 @@ export default function HeroSlider({ images, lang }: HeroSliderProps) {
         <AnimatePresence mode="wait">
           <motion.img
             key={currentIndex}
-            src={images[currentIndex]}
+            src={safeImages[currentIndex]}
             alt={`Organic Sip Showcase ${currentIndex + 1}`}
             initial={{ opacity: 0, scale: 1.08 }}
             animate={{ opacity: 1, scale: 1.02 }}
@@ -72,7 +74,7 @@ export default function HeroSlider({ images, lang }: HeroSliderProps) {
 
       {/* Slide Indicators */}
       <div className="absolute bottom-10 left-0 right-0 z-20 flex justify-center gap-2.5">
-        {images.map((_, idx) => (
+        {safeImages.map((_, idx) => (
           <button
             key={idx}
             onClick={() => setCurrentIndex(idx)}

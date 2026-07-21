@@ -22,7 +22,7 @@ interface AdminDashboardProps {
   onClose: () => void;
   isDarkMode?: boolean;
   setIsDarkMode?: (dark: boolean) => void;
-  onApplyChanges: () => Promise<boolean>;
+  onApplyChanges: () => Promise<{ success: boolean; message?: string }>;
 }
 
 export default function AdminDashboard({
@@ -53,12 +53,14 @@ export default function AdminDashboard({
 
   const handleApplyClick = async () => {
     setIsApplying(true);
-    const success = await onApplyChanges();
+    const result = await onApplyChanges();
     setIsApplying(false);
-    if (success) {
+    if (result?.success) {
       triggerSuccess(lang === 'en' ? 'Changes applied and published to live site!' : 'تم تطبيق ونشر التغييرات على الموقع الحي بنجاح!');
     } else {
-      alert(lang === 'en' ? 'Failed to publish changes to the server.' : 'فشل نشر التغييرات على الخادم.');
+      const detail = result?.message ? `\n\nDetails: ${result.message}` : '';
+      alert((lang === 'en' ? 'Failed to publish changes to the server.' : 'فشل نشر التغييرات على الخادم.') + detail);
+      console.error('Apply result:', result);
     }
   };
 
@@ -93,7 +95,8 @@ export default function AdminDashboard({
   const [customText, setCustomText] = useState(currentTheme.textDark);
 
   // Edit State for Hero Slider URLs
-  const [sliderUrls, setSliderUrls] = useState<string[]>([...homeSettings.sliderImages]);
+  const initialSliderUrls = Array.isArray(homeSettings?.sliderImages) ? [...homeSettings.sliderImages] : [];
+  const [sliderUrls, setSliderUrls] = useState<string[]>(initialSliderUrls);
   const [newSliderUrl, setNewSliderUrl] = useState('');
 
   // Edit State for Owner / Producer Image URL
@@ -101,8 +104,8 @@ export default function AdminDashboard({
 
   // Synchronize when homeSettings changes
   useEffect(() => {
-    setSliderUrls([...homeSettings.sliderImages]);
-    setProducerImageInput(homeSettings.producerImage || '');
+    setSliderUrls(Array.isArray(homeSettings?.sliderImages) ? [...homeSettings.sliderImages] : []);
+    setProducerImageInput(homeSettings?.producerImage || '');
   }, [homeSettings]);
 
   // Notifications

@@ -18,6 +18,15 @@ import BrandLogo from './components/BrandLogo';
 import ProducerModal from './components/ProducerModal';
 
 export default function App() {
+  // Determine API base: if user opened the HTML via file://, fall back to localhost:3000
+  const API_BASE = (() => {
+    try {
+      if (window.location.protocol === 'file:') return 'http://localhost:3000';
+      return '';
+    } catch (e) {
+      return 'http://localhost:3000';
+    }
+  })();
   // --- 1. Persisted / Reactive State ---
   const [lang, setLang] = useState<Language>(() => {
     const cached = localStorage.getItem('organic_sip_lang');
@@ -79,7 +88,7 @@ export default function App() {
   // Fetch from Server & Poll every 10 seconds to keep visitors in sync
   useEffect(() => {
     const fetchMenu = () => {
-      fetch('/api/menu')
+      fetch(`${API_BASE}/api/menu`)
         .then(res => res.json())
         .then(data => {
           // If admin is open, do not overwrite state to prevent disturbing the owner's active editing
@@ -99,9 +108,9 @@ export default function App() {
   }, [isAdminOpen]);
 
   // Apply Changes Handler (saves state to server)
-  const handleApplyChanges = async (): Promise<boolean> => {
+  const handleApplyChanges = async (): Promise<{ success: boolean; message?: string }> => {
     try {
-      const response = await fetch('/api/menu', {
+      const response = await fetch(`${API_BASE}/api/menu`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,11 +122,26 @@ export default function App() {
           homeSettings,
         }),
       });
-      const data = await response.json();
-      return !!data.success;
+
+      if (!response.ok) {
+        const text = await response.text().catch(() => '');
+        console.error('Apply failed, status:', response.status, text);
+        return { success: false, message: `HTTP ${response.status}: ${text}` };
+      }
+
+      let data: any = null;
+      try {
+        data = await response.json();
+      } catch (err) {
+        console.error('Invalid JSON response from server while applying changes:', err);
+        return { success: false, message: 'Invalid JSON response from server' };
+      }
+
+      if (data && data.success) return { success: true };
+      return { success: false, message: data?.message || 'Unknown server response' };
     } catch (e) {
       console.error('Error applying changes to server:', e);
-      return false;
+      return { success: false, message: String(e) };
     }
   };
 
